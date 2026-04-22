@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Shortest Route Between Two Airports</h2>
+<p class="subtitle">Show each step with distance and highlight the shortest edge.</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="result">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div>
+        <label for="source">Source Node</label>
+        <input id="source" type="text" name="source" value="{{ form.source.value|default:'' }}" placeholder="A, B..." maxlength="1" required>
+        {% if form.source.errors %}<small>{{ form.source.errors.0 }}</small>{% endif %}
+    </div>
+
+    <div>
+        <label for="destination">Destination Node</label>
+        <input id="destination" type="text" name="destination" value="{{ form.destination.value|default:'' }}" placeholder="A, B..." maxlength="1" required>
+        {% if form.destination.errors %}<small>{{ form.destination.errors.0 }}</small>{% endif %}
+    </div>
+
+    <button type="submit">Find Shortest</button>
+</form>
+
+{% if steps %}
+<div class="result">
+    {% for step in steps %}
+        <p>{{ step }}</p>
+    {% endfor %}
+
+    {% if shortest %}
+        <p><strong>Shortest is {{ shortest }}</strong></p>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if result and result != "Found" %}
+<div class="result">
+    {{ result }}
+</div>
+{% endif %}
+{% endblock %}

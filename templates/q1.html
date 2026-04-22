@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Find Path and Distance to Target Node</h2>
+<p class="subtitle">Search by start node, direction, and target node.</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="result">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div>
+        <label for="start">Start Node</label>
+        <input id="start" type="text" name="start" value="{{ form.start.value|default:'' }}" placeholder="A, B, C..." maxlength="1" required>
+        {% if form.start.errors %}<small>{{ form.start.errors.0 }}</small>{% endif %}
+    </div>
+
+    <div>
+        <label for="target">Target Node</label>
+        <input id="target" type="text" name="target" value="{{ form.target.value|default:'' }}" placeholder="H" maxlength="1" required>
+        {% if form.target.errors %}<small>{{ form.target.errors.0 }}</small>{% endif %}
+    </div>
+
+    <div>
+        <label for="direction">Direction</label>
+        <select id="direction" name="direction" required>
+            <option value="left" {% if form.direction.value == 'left' %}selected{% endif %}>Left</option>
+            <option value="right" {% if form.direction.value == 'right' %}selected{% endif %}>Right</option>
+        </select>
+        {% if form.direction.errors %}<small>{{ form.direction.errors.0 }}</small>{% endif %}
+    </div>
+
+    <button type="submit">Search</button>
+</form>
+
+{% if result == "Found" %}
+<div class="result">
+    <p><strong>Final Node:</strong> {{ form.target.value|upper }}</p>
+    <p><strong>Path:</strong> {{ path }}</p>
+    <p><strong>Total Distance:</strong> {{ distance }} km</p>
+</div>
+{% endif %}
+
+{% if result and result != "Found" %}
+<div class="result">
+    {{ result }}
+</div>
+{% endif %}
+{% endblock %}

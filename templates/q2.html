@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Longest Route in Airport</h2>
+<p class="subtitle">Longest root-to-node path by total distance.</p>
+
+<div class="result">
+    <p><strong>Longest Node:</strong> {{ node }}</p>
+    <p><strong>Path:</strong> {{ path }}</p>
+    <p><strong>Total Distance:</strong> {{ distance }} km</p>
+</div>
+{% endblock %}

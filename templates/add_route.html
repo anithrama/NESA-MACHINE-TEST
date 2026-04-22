@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Airport Route</h2>
+<p class="subtitle">Create airport route nodes with code, position, direction, and duration.</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="result">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div>
+        <label for="airport_code">Airport Code</label>
+        <input id="airport_code" type="text" name="airport_code" value="{{ form.airport_code.value|default:'' }}" placeholder="A, B, C..." maxlength="1" required>
+        {% if form.airport_code.errors %}<small>{{ form.airport_code.errors.0 }}</small>{% endif %}
+    </div>
+
+    <div>
+        <label for="position">Position</label>
+        <input id="position" type="number" name="position" value="{{ form.position.value|default:'' }}" min="1" placeholder="Position index" required>
+        {% if form.position.errors %}<small>{{ form.position.errors.0 }}</small>{% endif %}
+    </div>
+
+    <div>
+        <label for="duration">Duration (min)</label>
+        <input id="duration" type="number" name="duration" value="{{ form.duration.value|default:'' }}" min="1" placeholder="Duration in minutes" required>
+        {% if form.duration.errors %}<small>{{ form.duration.errors.0 }}</small>{% endif %}
+    </div>
+
+    <div>
+        <label for="direction">Direction</label>
+        <select id="direction" name="direction" required>
+            <option value="left" {% if form.direction.value == 'left' %}selected{% endif %}>Left</option>
+            <option value="right" {% if form.direction.value == 'right' %}selected{% endif %}>Right</option>
+        </select>
+        {% if form.direction.errors %}<small>{{ form.direction.errors.0 }}</small>{% endif %}
+    </div>
+
+    <button type="submit">Add Route</button>
+</form>
+
+{% if added_route %}
+    <div class="result node-figure">
+        <strong>New Node Added</strong>
+        <p style="margin:8px 0 0;"><strong>{{ added_route.airport_code }}</strong></p>
+        <p style="margin:6px 0 0;">Position: {{ added_route.position }} | Direction: {{ added_route.direction|title }} | Duration: {{ added_route.duration }} min</p>
+    </div>
+{% endif %}
+
+{% if routes %}
+    <div class="result">
+        <strong>Current Routes</strong>
+        <ul class="routes-list">
+            {% for route in routes %}
+                <li {% if added_route and route.id == added_route.id %}class="added-highlight"{% endif %}>
+                    {{ route.airport_code }} | Position: {{ route.position }} | Direction: {{ route.direction|title }} | Duration: {{ route.duration }} min
+                    <form method="post" action="{% url 'delete_route' route.id %}" style="display:inline; margin-left:10px;">
+                        {% csrf_token %}
+                        <button type="submit" style="width:auto; padding:6px 10px; margin-top:0;">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}

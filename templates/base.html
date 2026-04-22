@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Routes System</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <form action="{% url 'add_route' %}" method="get">
+                    <button type="submit" class="nav-button">Add New Nodes</button>
+                </form>
+            </li>
+            <li><a href="{% url 'q1' %}">Q1: Nth Node</a></li>
+            <li>
+                <a href="{% url 'q2' %}" onclick="window.location.href='{% url 'q2' %}?r=' + Date.now(); return false;">Q2: Longest Route</a>
+            </li>
+            <li><a href="{% url 'q3' %}">Q3: Shortest Route</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section class="panel">
+            {% block content %}{% endblock %}
+        </section>
+    </main>
+</body>
+</html>
